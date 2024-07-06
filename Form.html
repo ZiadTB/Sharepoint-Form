@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Date and Time with Country Selector</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 50vh;
+            margin: 0;
+            position: relative;
+        }
+        #serial-number {
+            text-align: center;
+            margin-bottom: 25px; /* Space between serial number and date/time */
+        }
+        #date-time {
+            margin-bottom: 25px; /* Adjustable margin */
+            transform: translateX(-200px); /* Move date/time -200px to the left */
+        }
+        #date, #time {
+            text-align: center;
+        }
+        #country-selector {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #reset-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        #pdf-upload {
+            text-align: center;
+            margin-top: 20px;
+            margin-left: 75px;
+        }
+        #text-box {
+            width: calc(40% - 70px); /* Full width minus 70px for 35px padding on each side */
+            margin-top: 20px;
+        }
+        #text-input {
+            width: 100%;
+            height: auto;
+            box-sizing: border-box; /* Include padding and border in element's total width and height */
+            padding: 10px;
+            font-size: 16px;
+            resize: none; /* Remove manual resizing */
+            overflow: hidden; /* Hide scrollbar */
+        }
+        select {
+            padding: 10px;
+            border-radius: 10px; /* Curved edges */
+            border: 1px solid #ccc;
+            font-size: 16px;
+            background-color: #fff;
+            -webkit-appearance: none; /* For removing the default arrow in Webkit browsers */
+            -moz-appearance: none; /* For removing the default arrow in Firefox */
+            appearance: none; /* For modern browsers */
+            text-align: center; /* Center text in dropdown */
+        }
+        select:focus {
+            outline: none; /* Remove the default focus outline */
+            border-color: #aaa; /* Add a border color on focus */
+        }
+        input[type="file"] {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <button id="reset-button" onclick="resetSerialNumber()">Reset Serial Number</button>
+    <div id="serial-number"></div>
+    <div id="date-time">
+        <div id="date"></div>
+        <div id="time"></div>
+    </div>
+    <div id="country-selector">
+        <select id="countries">
+            <option>-- Select Country --</option>
+            <!-- Add country options here -->
+        </select>
+    </div>
+    <div id="pdf-upload">
+        <label for="pdf-input">Upload PDF: </label>
+        <input type="file" id="pdf-input" accept="application/pdf">
+    </div>
+    <div id="text-box">
+        <textarea id="text-input" placeholder="Enter text here"></textarea>
+    </div>
+
+    <script>
+        // Function to get and update serial number
+        function updateSerialNumber() {
+            let serialNumber = localStorage.getItem('serialNumber');
+            if (serialNumber === null) {
+                serialNumber = '00000000';
+            } else {
+                serialNumber = (parseInt(serialNumber) + 1).toString().padStart(8, '0');
+            }
+            localStorage.setItem('serialNumber', serialNumber);
+            document.getElementById('serial-number').textContent = `Serial Number: ${serialNumber}`;
+        }
+
+        // Function to format the date and time
+        function formatDateTime(date) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            document.getElementById('date').textContent = date.toLocaleDateString(undefined, options);
+            document.getElementById('time').textContent = date.toLocaleTimeString(undefined, timeOptions);
+        }
+
+        // Function to reset the serial number
+        function resetSerialNumber() {
+            localStorage.removeItem('serialNumber');
+            location.reload(); // Refresh the page to see the changes
+        }
+
+        // Update serial number and display date and time once
+        updateSerialNumber();
+        const now = new Date();
+        formatDateTime(now);
+
+        // List of countries
+        const countries = ["Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", 
+                            "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", 
+                            "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", "Bolivia", 
+                            "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", 
+                            "Burundi", "Cabo Verde", "Cambodia", "Cameroon", "Canada", "Central African Republic", 
+                            "Chad", "Chile", "China", "Colombia", "Comoros", "Congo", "Costa Rica", "Croatia", "Cuba", 
+                            "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", 
+                            "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia", 
+                            "Fiji", "Finland", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", 
+                            "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras", "Hungary", 
+                            "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Italy", "Jamaica", 
+                            "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Kuwait", "Kyrgyzstan", "Laos", 
+                            "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", 
+                            "Luxembourg", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", 
+                            "Mauritania", "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", 
+                            "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", 
+                            "Nicaragua", "Niger", "Nigeria", "North Korea", "North Macedonia", "Norway", "Oman", "Pakistan", 
+                            "Palau", "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", 
+                            "Portugal", "Qatar", "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", 
+                            "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", 
+                            "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "Solomon Islands", 
+                            "Somalia", "South Africa", "South Korea", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", 
+                            "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", 
+                            "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", "Uganda", 
+                            "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "Uruguay", "Uzbekistan", 
+                            "Vanuatu", "Vatican City", "Venezuela", "Vietnam", "Yemen", "Zambia", "Zimbabwe"];
+
+        const countrySelect = document.getElementById('countries');
+        countries.forEach(country => {
+            const option = document.createElement('option');
+            option.textContent = country;
+            option.value = country;
+            countrySelect.appendChild(option);
+        });
+
+        // Adjust the height of the textarea to fit the content
+        const textarea = document.getElementById('text-input');
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+        });
+    </script>
+</body>
+</html>
