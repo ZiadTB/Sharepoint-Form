@@ -1,0 +1,5 @@
+{
+  "Description": "Domain ownership verification file for Microsoft 365 - place in the website root",
+  "Domain": "ziadtb.github.io",
+  "Id": "b2d42878-4a0e-470d-98ea-b3b0a094d366"
+}
